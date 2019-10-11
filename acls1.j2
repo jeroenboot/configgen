@@ -1,0 +1,11 @@
+ip access-list standard mc-rp-groups-core
+ permit 239.0.0.0 0.255.255.255
+ip access-list standard snmp_ro_access
+ permit 192.168.5.10
+ permit 10.0.0.0 0.255.255.255
+ip access-list standard snmp_rw_access
+ permit 192.168.5.10
+ permit 10.0.0.0 0.255.255.255
+ip access-list standard vty_access
+ permit 192.168.5.10
+ permit 10.0.0.0 0.255.255.255

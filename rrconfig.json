@@ -1,0 +1,81 @@
+[
+  {
+    "hostname": "hostname",
+    "enablesecret5": "supersecret",
+    "beheersecret5": "supersecret",
+    "logbuffer": "500000",
+    "mngtsourceif": "Loopback0",
+    "syslogserver": [
+      {
+        "ip": "x.x.x.x"
+      },
+      {
+        "ip": "x.x.x.x"
+      },
+      {
+        "ip": "x.x.x.x"
+      }
+    ],
+    "domainname": "domainname",
+    "licencelevel": "licencelevel",
+    "loopback0ip": "x.x.x.x",
+    "loopback100ip": "x.x.x.x",
+    "p2pmask": "255.255.255.254",
+    "uplink1": "Gix/y/z",
+    "uplink2": "Gix/y/z",
+    "uplink1neighborname": "uplink1neighborname",
+    "uplink1neighborint": "uplink1neighborint",
+    "uplink1ip": "x.x.x.x",
+    "uplink2neighborname": "uplink2neighbornam",
+    "uplink2neighborint": "Gix/y/z",
+    "uplink2ip": "x.x.x.x",
+    "ospfpassword7": "supersecret",
+    "ospfreferencebw": "1000000",
+    "ospfprocess" : "1",
+    "bgpasn": "65000",
+    "snmplocation": "snmplocation",
+    "snmpcontact": "snmpcontact",
+    "snmprocommunities": [
+      {
+        "ro" : "supersecret"
+      },
+      {
+        "ro" : "supersecret"
+      }
+    ],
+    "snmprwcommunities": [
+      {
+        "rw" : "supersecret"
+      },
+      {
+        "rw" : "supersecret"
+      }
+    ],
+    "snmpservers": [
+      {
+        "ip": "x.x.x.x",
+        "trapcommunity": "supersecret"
+      },
+      {
+        "ip": "x.x.x.x",
+        "trapcommunity": "supersecret"
+      }
+    ],
+    "tacacsserver": "x.x.x.x",
+    "tacacsserver1key7": "supersecret",
+    "ntpserversec": "x.x.x.x",
+    "ntpserverpri": "x.x.x.x",
+    "peers": [
+      {
+        "peerip": "x.x.x.x",
+        "peerdesc": "peerdesc",
+        "peerremoteas": "65000"
+      },
+      {
+        "peerip": "x.x.x.x",
+        "peerdesc": "peerdesc",
+        "peerremoteas": "65000"
+      }
+    ]
+  }
+]

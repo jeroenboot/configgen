@@ -1,0 +1,23 @@
+line con 0
+ exec-timeout 30 0
+ logging synchronous
+ transport output none
+ stopbits 1
+line aux 0
+ exec-timeout 300 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ access-class vty_access in
+ exec-timeout 30 0
+ logging synchronous
+ transport input ssh
+ transport output none
+line vty 5 15
+ access-class vty_access in
+ exec-timeout 30 0
+ logging synchronous
+ transport input ssh
+ transport output none
+

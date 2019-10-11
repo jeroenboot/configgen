@@ -1,0 +1,15 @@
+{% for community in snmprocommunities %}
+snmp-server community {{community.ro}} RO snmp_ro_access
+{% endfor %}
+{% for community in snmprwcommunities %}
+snmp-server community {{community.rw}} RW snmp_rw_access
+{% endfor %}
+snmp-server trap-source {{mngtsourceif}}
+snmp-server location {{snmplocation}}
+snmp-server contact {{snmpcontact}}
+snmp-server enable traps
+{% for snmpserver in snmpservers%}
+snmp-server host {{snmpserver.ip}} {{snmpserver.trapcommunity}}
+{% endfor %}
+snmp ifmib ifindex persist
+

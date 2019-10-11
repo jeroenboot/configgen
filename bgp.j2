@@ -1,0 +1,55 @@
+router bgp {{bgpasn}}
+ bgp router-id {{loopback0ip}}
+ bgp log-neighbor-changes
+ {% for peer in peers %}
+ neighbor {{peer.peerip}} remote-as {{peer.peerremoteas}}
+ neighbor {{peer.peerip}} description {{peer.peerdesc}}
+ neighbor {{peer.peerip}} update-source {{mngtsourceif}}
+ {% endfor %}
+ {% for peer in peerslcm %}
+ neighbor {{peer.peerip}} remote-as {{peer.peerremoteas}}
+ neighbor {{peer.peerip}} description {{peer.peerdesc}}
+ neighbor {{peer.peerip}} update-source {{mngtsourceif}}
+ {% endfor %}
+ !
+ address-family ipv4
+  bgp nexthop route-map bgp-next-hop
+  bgp nexthop trigger delay 0
+  {% for peer in peers %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+  {% for peer in peerslcm %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+ exit-address-family
+ !
+ address-family vpnv4
+  bgp nexthop route-map bgp-next-hop
+  bgp nexthop trigger delay 0
+  {% for peer in peers %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} send-community both
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+  {% for peer in peerslcm %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} send-community both
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+ exit-address-family
+ !
+ address-family ipv4 mdt
+  {% for peer in peers %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} send-community both
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+  {% for peer in peerslcm %}
+  neighbor {{peer.peerip}} activate
+  neighbor {{peer.peerip}} send-community both
+  neighbor {{peer.peerip}} route-reflector-client
+  {% endfor %}
+ exit-address-family
+!

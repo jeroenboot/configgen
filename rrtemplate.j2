@@ -1,0 +1,248 @@
+version 15.5
+service nagle
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+no platform punt-keepalive disable-kernel-core
+!
+hostname {{hostname}}
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+logging buffered {{logbuffer}}
+no logging console
+enable secret 5 {{enablesecret5}}
+!
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ local enable
+aaa authentication enable default group tacacs+ enable
+aaa authorization exec default group tacacs+ local
+aaa authorization commands 1 default group tacacs+ local
+aaa authorization commands 15 default group tacacs+ local
+aaa accounting exec default start-stop group tacacs+
+aaa accounting commands 1 default start-stop group tacacs+
+aaa accounting commands 15 default start-stop group tacacs+
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone CET 1 0
+clock summer-time CET recurring last Sun Mar 2:00 last Sun Oct 3:00
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+no ip bootp server
+
+no ip domain lookup
+ip domain name {{domainname}}
+ip multicast-routing distributed
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+mpls label protocol ldp
+mpls ip default-route
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license boot level {{licencelevel}}
+!
+spanning-tree extend system-id
+!
+username {{beheeruser}} secret 5 {{beheersecret5}}
+!
+redundancy
+ mode none
+!
+{% include 'class-maps.j2' %}
+!
+{% include 'policy-maps.j2' %}
+!
+interface Loopback0
+ ip address {{loopback0ip}} 255.255.255.255
+!
+interface Loopback1
+ description core pim-rp anycast address
+ ip address {{loopback100ip}} 255.255.255.255
+ ip pim sparse-mode
+!
+interface TenGigabitEthernet0/0/0
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet0/0/1
+ no ip address
+ shutdown
+!
+interface {{uplink1}}
+ description p2p to {{uplink1neighborname}} {{uplink1neighborint}}
+ mtu 1760
+ ip address {{uplink1ip}} {{p2pmask}}
+ no ip redirects
+ no ip proxy-arp
+ ip mtu 1500
+ ip pim sparse-mode
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 7 {{ospfpassword7}}
+ ip ospf network point-to-point
+ ip ospf hello-interval 2
+ load-interval 30
+ carrier-delay msec 0
+ negotiation auto
+ mpls ip
+ mpls label protocol ldp
+ mpls mtu 1536
+!
+interface {{uplink2}}
+ description p2p to {{uplink2neighborname}} {{uplink2neighborint}}
+ mtu 1760
+ ip address {{uplink2ip}} {{p2pmask}}
+ no ip redirects
+ no ip proxy-arp
+ ip mtu 1500
+ ip pim sparse-mode
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 7 {{ospfpassword7}}
+ ip ospf network point-to-point
+ ip ospf hello-interval 2
+ load-interval 30
+ carrier-delay msec 0
+ negotiation auto
+ mpls ip
+ mpls label protocol ldp
+ mpls mtu 1536
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/0/3
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/0/4
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/0/5
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
+!
+{% include 'ospf.j2' %}
+!
+{% include 'bgp.j2' %}
+!
+ip local policy route-map remarking-local-traffic
+ip forward-protocol nd
+!
+ip bgp-community new-format
+no ip http server
+no ip http secure-server
+ip tftp source-interface {{mngtsourceif}}
+ip pim rp-address {{loopback100ip}} mc-rp-groups-core
+ip msdp peer  connect-source {{mngtsourceif}}
+ip msdp peer {{rr01ut001lo0}} connect-source {{mngtsourceif}}
+ip msdp peer {{rr01ehv01lo0}} connect-source {{mngtsourceif}}
+ip msdp cache-sa-state
+ip msdp originator-id {{mngtsourceif}}
+ip tacacs source-interface {{mngtsourceif}}
+ip ssh logging events
+ip ssh version 2
+!
+{% include 'acls1.j2' %}
+!
+!
+!
+ip prefix-list bgp-next-hop seq 10 permit 0.0.0.0/0 le 29
+logging source-interface {{mngtsourceif}}
+{% for logserver in logservers %}
+logging host {{logserver.ip}}
+{% endfor %}
+													
+!
+{% include 'route-maps.j2' %}
+!
+{% include 'snmp.j2' %}
+mpls ldp router-id {{mngtsourceif}}
+!
+tacacs-server host {{tacacsserver}}
+tacacs-server timeout 10
+tacacs-server directed-request
+tacacs-server key 7 {{tacacsserver1key7}}
+tacacs server {{tacacsserver}}
+ key 7 {{tacacsserver1key7}}
+!
+!
+!
+control-plane
+ service-policy input copp-policy
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+{% include 'banner.j2' %}
+!
+{% include 'lines.j2' %}
+!
+ntp source {{mngtsourceif}}
+ntp server {{ntpserversec}}
+ntp server {{ntpserverpri}} prefer
+!
+end
