@@ -3,7 +3,7 @@
     "hostname": "hostname",
     "enablesecret5": "supersecret",
     "beheersecret5": "supersecret",
-    "logbuffer": "500000",
+    "logbuffer": "50000",
     "mngtsourceif": "Loopback0",
     "syslogserver": [
       {
