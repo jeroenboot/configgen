@@ -1,7 +1,7 @@
 [
   {
     "hostname": "hostname",
-    "enablesecret5": "supersecret",
+    "enablesecret5": "supersecretpassword",
     "beheersecret5": "supersecret",
     "logbuffer": "50000",
     "mngtsourceif": "Loopback0",
